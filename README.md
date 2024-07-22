@@ -7,7 +7,7 @@ pip install -r requirements.txt
 
 
 ### admin page
-username = maryam
+username = maryam,
 password = 123456
 
 
