@@ -52,6 +52,8 @@ class BooksListSerializer(serializers.ModelSerializer):
 class ReviewsSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     book = serializers.PrimaryKeyRelatedField(queryset=Books.objects.all())
+    # user = UserSerializer(many=True, read_only=True)
+    # book = BooksListSerializer(many=True, read_only=True)
 
     class Meta:
         model = Reviews

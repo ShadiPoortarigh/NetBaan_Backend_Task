@@ -7,6 +7,7 @@ from . import serializers
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from core import models
+from django.db.models import Q
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -43,9 +44,21 @@ class ReviewsGenericAPIView(generics.GenericAPIView):
         if not books.exists():
             return Response({'Warning': 'There is not enough data about you'})
         else:
-            suggestion = models.Reviews.objects.filter(rating__gte=request.data.get('rating'))
+            selection = models.Reviews.objects.filter(user=self.request.user, rating=5)
+            genres = []
+
+            for item in selection:
+                genres.append(item.book.genre)
+            print(genres)
+
+            query = Q()
+            for g in genres:
+                query |= Q(genre=g)
+
+            suggestion = models.Books.objects.filter(query)
+            print(suggestion.count())
             if suggestion:
-                serializer = serializers.ReviewsSerializer(suggestion, many=True)
+                serializer = serializers.BooksListSerializer(suggestion, many=True)
                 return Response(serializer.data)
 
 
@@ -55,11 +68,12 @@ class ReviewsRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
 
     def partial_update(self, request, *args, **kwargs):
         title = self.kwargs.get('title')
+        print(title)
         book = models.Books.objects.get(title=title)
         review_obj = models.Reviews.objects.get(book=book)
         print(review_obj)
         if review_obj:
-            serializer = serializers.ReviewsSerializer(review_obj, data=request.data)
+            serializer = serializers.ReviewsSerializer(review_obj, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(data=serializer.data)

@@ -55,7 +55,7 @@ class Books(models.Model):
 class Reviews(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     book = models.ForeignKey(Books, on_delete=models.CASCADE)
-    rating = models.IntegerField()
+    rating = models.IntegerField(null=True)
 
     class Meta:
         constraints = [
