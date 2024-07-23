@@ -89,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'NetBaan',
         'USER': 'postgres',
-        'PASSWORD': '12qw!@QW',
+        'PASSWORD': '---',
         'HOST': 'localhost',
         'PORT': '',
     }
